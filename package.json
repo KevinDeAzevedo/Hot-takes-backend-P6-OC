@@ -4,11 +4,13 @@
   "description": "A Back-end with an API REST and MongoDB database",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --watch server.js"
   },
   "author": "Kevin De Azevedo",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2"
   }
 }
