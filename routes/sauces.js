@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.post('/', auth, multer, sauceCtrl.createSauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
+router.put('/:id', auth, multer, sauceCtrl.modifySauce)
 router.get('/', sauceCtrl.getAllSauces);
 router.get('/:id', sauceCtrl.getSauce)
 
