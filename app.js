@@ -1,31 +1,27 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const cors = require('cors')
+const userRoutes = require('./routes/user')
+
+// utilisation des varaibles .env
+require("dotenv").config()
+
 const app = express()
 
+// Configurer CORS
 app.use(cors())
 
-// middleware n°1
-app.use((req, res, next) => {
-	res.status(201); // On peut changer le code status
-	res.json({message: 'Votre requete a bien été reçue.'})
-next()
-})
+// recevoir des données JSON
+app.use(express.json())
 
-// middleware n°2
-app.use((req, res) => {
-	console.log('Requete bien envoyée !')
-})
+// Endpoint d'authentification
+app.use('/api/auth', userRoutes)
 
 // Connexion à la Base de donnée MongoDB
-try {
-	mongoose.connect(
-	'mongodb+srv://`${process.env.MONGO_USER}`:`${process.env.MONGO_PASSWORD}`@cluster0.xnhlqf7.mongodb.net/?retryWrites=true&w=majority',
-	{ useNewUrlParser: true, useUnifiedTopology: true },
-	() => console.log("Mongoose est connecté")
-);
-} catch (e) {
-console.log("Mongoose n'arrive pas à se connecter");
-}
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.xnhlqf7.mongodb.net/?retryWrites=true&w=majority`,
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 module.exports = app
