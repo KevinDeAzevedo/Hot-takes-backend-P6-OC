@@ -6,6 +6,7 @@ const auth = require('../middleware/auth')
 const router = express.Router()
 
 router.post('/', auth, multer, sauceCtrl.createSauce);
+router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/', sauceCtrl.getAllSauces);
 router.get('/:id', sauceCtrl.getSauce)
 
