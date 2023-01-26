@@ -67,3 +67,37 @@ exports.deleteSauce = (req, res, next) => {
           res.status(500).json({ error });
       });
 };
+
+exports.affinitySauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id})
+    .then(sauce => {
+      if (req.body.userId != req.auth.userId) {
+        res.status(401).json({message: 'Not authorized'});
+      } else {
+        if (req.body.like === 1){
+          /* On ajoute req.auth.userId à sauce.usersLiked */
+          /* On enlève req.auth.userId à sauce.usersDisliked*/
+          console.log('1')
+        } else if (req.body.like === -1) {
+          /* On ajoute req.auth.userId à sauce.usersDisliked */
+          /* On enlève req.auth.userId à sauce.usersLiked*/
+          console.log('-1')
+        } else if (req.body.like === 0) {
+          /* On enlève req.auth.userId à sauce.usersDisliked */
+          /* On enlève req.auth.userId à sauce.usersLiked*/
+          console.log('0')
+        }
+      }
+
+
+      sauce.likes = sauce.usersLiked.length
+      sauce.dislikes = sauce.usersDisliked.length
+      sauce.save()
+      res.status(200).json(sauce)
+    }
+    )
+    .catch( error => {
+      res.status(500).json({ error });
+  });
+};
+

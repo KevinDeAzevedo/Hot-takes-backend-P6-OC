@@ -11,4 +11,6 @@ router.put('/:id', auth, multer, sauceCtrl.modifySauce)
 router.get('/', sauceCtrl.getAllSauces);
 router.get('/:id', sauceCtrl.getSauce)
 
+router.post('/:id/like', auth, sauceCtrl.affinitySauce)
+
 module.exports = router
