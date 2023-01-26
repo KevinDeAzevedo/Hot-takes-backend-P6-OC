@@ -75,21 +75,27 @@ exports.affinitySauce = (req, res, next) => {
         res.status(401).json({message: 'Not authorized'});
       } else {
         if (req.body.like === 1){
-          /* On ajoute req.auth.userId à sauce.usersLiked */
-          /* On enlève req.auth.userId à sauce.usersDisliked*/
           console.log('1')
+          /* On ajoute req.auth.userId à sauce.usersLiked */
+          sauce.usersLiked.push(req.auth.userId)
+          /* On enlève req.auth.userId à sauce.usersDisliked*/
+          sauce.usersDisliked = sauce.usersDisliked.filter(id => id != req.auth.userId)
         } else if (req.body.like === -1) {
-          /* On ajoute req.auth.userId à sauce.usersDisliked */
-          /* On enlève req.auth.userId à sauce.usersLiked*/
           console.log('-1')
+          /* On ajoute req.auth.userId à sauce.usersDisliked */
+          sauce.usersDisliked.push(req.auth.userId)
+          /* On enlève req.auth.userId à sauce.usersLiked*/
+          sauce.usersLiked = sauce.usersLiked.filter(id => id != req.auth.userId)
         } else if (req.body.like === 0) {
           /* On enlève req.auth.userId à sauce.usersDisliked */
+          sauce.usersDisliked = sauce.usersDisliked.filter(id => id != req.auth.userId)
           /* On enlève req.auth.userId à sauce.usersLiked*/
+          sauce.usersLiked = sauce.usersLiked.filter(id => id != req.auth.userId)
           console.log('0')
         }
       }
 
-
+      /* Les Likes ou Dislikes sont la somme des personnes qui ont likés ou dislikés */
       sauce.likes = sauce.usersLiked.length
       sauce.dislikes = sauce.usersDisliked.length
       sauce.save()
