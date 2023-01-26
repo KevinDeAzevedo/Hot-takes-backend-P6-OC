@@ -88,7 +88,6 @@ exports.affinitySauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (req.body.like === 1) {
-        console.log('1');
         /* On ajoute req.auth.userId à sauce.usersLiked */
         sauce.usersLiked.push(req.auth.userId);
         /* On enlève req.auth.userId à sauce.usersDisliked*/
@@ -96,7 +95,6 @@ exports.affinitySauce = (req, res, next) => {
           (id) => id != req.auth.userId
         );
       } else if (req.body.like === -1) {
-        console.log('-1');
         /* On ajoute req.auth.userId à sauce.usersDisliked */
         sauce.usersDisliked.push(req.auth.userId);
         /* On enlève req.auth.userId à sauce.usersLiked*/
@@ -112,7 +110,6 @@ exports.affinitySauce = (req, res, next) => {
         sauce.usersLiked = sauce.usersLiked.filter(
           (id) => id != req.auth.userId
         );
-        console.log('0');
       }
 
       /* Les Likes ou Dislikes sont la somme des personnes qui ont likés ou dislikés */
