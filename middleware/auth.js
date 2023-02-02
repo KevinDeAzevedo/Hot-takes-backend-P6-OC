@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-// utilisation des varaibles .env
+// Utilisation des varaibles .env
 require("dotenv").config()
 
 module.exports = (req, res, next) => {

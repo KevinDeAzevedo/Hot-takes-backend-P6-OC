@@ -1,7 +1,7 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
-exports.createSauce = (req, res, next) => {
+exports.createSauce = (req, res) => {
   const sauceObject = JSON.parse(req.body.sauce); /* Parse ? : Le front envoie du JSON en Chaîne de caractère à cause du fichier*/
   delete sauceObject._id;
   delete sauceObject._userId;
@@ -22,19 +22,19 @@ exports.createSauce = (req, res, next) => {
     });
 };
 
-exports.getAllSauces = (req, res, next) => {
+exports.getAllSauces = (req, res) => {
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
 
-exports.getSauce = (req, res, next) => {
+exports.getSauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
 
-exports.modifySauce = (req, res, next) => {
+exports.modifySauce = (req, res) => {
   const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
@@ -63,7 +63,7 @@ exports.modifySauce = (req, res, next) => {
     });
 };
 
-exports.deleteSauce = (req, res, next) => {
+exports.deleteSauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
@@ -84,29 +84,23 @@ exports.deleteSauce = (req, res, next) => {
     });
 };
 
-exports.affinitySauce = (req, res, next) => {
+exports.affinitySauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (req.body.like === 1) {
-        /* On ajoute req.auth.userId à sauce.usersLiked */
         sauce.usersLiked.push(req.auth.userId);
-        /* On enlève req.auth.userId à sauce.usersDisliked*/
         sauce.usersDisliked = sauce.usersDisliked.filter(
           (id) => id != req.auth.userId
         );
       } else if (req.body.like === -1) {
-        /* On ajoute req.auth.userId à sauce.usersDisliked */
         sauce.usersDisliked.push(req.auth.userId);
-        /* On enlève req.auth.userId à sauce.usersLiked*/
         sauce.usersLiked = sauce.usersLiked.filter(
           (id) => id != req.auth.userId
         );
       } else if (req.body.like === 0) {
-        /* On enlève req.auth.userId à sauce.usersDisliked */
         sauce.usersDisliked = sauce.usersDisliked.filter(
           (id) => id != req.auth.userId
         );
-        /* On enlève req.auth.userId à sauce.usersLiked*/
         sauce.usersLiked = sauce.usersLiked.filter(
           (id) => id != req.auth.userId
         );
