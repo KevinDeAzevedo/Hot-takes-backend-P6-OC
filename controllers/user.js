@@ -1,11 +1,13 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const validator = require('validator')
 // Utilisation des varaibles .env
 require("dotenv").config()
 
 exports.signup = (req, res) => {
-  bcrypt.hash(req.body.password, 10)
+  if (validator.isEmail(req.body.email)) {
+    bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
         email: req.body.email,
@@ -16,6 +18,9 @@ exports.signup = (req, res) => {
         .catch(error => res.status(400).json({ error }))
     })
     .catch(error => res.status(500).json({ error }))
+  } else {
+    res.status(401).json({ message: `Format de l'adresse email non valide` })
+  }
 };
 
 exports.login = (req, res) => {
