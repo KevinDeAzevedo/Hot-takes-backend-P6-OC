@@ -89,33 +89,29 @@ exports.deleteSauce = (req, res) => {
 exports.affinitySauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
-      if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: 'Not authorized' });
-      } else {
-        if (req.body.like === 1) {
-          sauce.usersLiked.push(req.auth.userId);
-          sauce.usersDisliked = sauce.usersDisliked.filter(
-            (id) => id != req.auth.userId
-          );
-        } else if (req.body.like === -1) {
-          sauce.usersDisliked.push(req.auth.userId);
-          sauce.usersLiked = sauce.usersLiked.filter(
-            (id) => id != req.auth.userId
-          );
-        } else if (req.body.like === 0) {
-          sauce.usersDisliked = sauce.usersDisliked.filter(
-            (id) => id != req.auth.userId
-          );
-          sauce.usersLiked = sauce.usersLiked.filter(
-            (id) => id != req.auth.userId
-          );
-        }
-        /* Les Likes ou Dislikes sont la somme des personnes qui ont likés ou dislikés */
-        sauce.likes = sauce.usersLiked.length;
-        sauce.dislikes = sauce.usersDisliked.length;
-        sauce.save();
-        res.status(200).json({ message: 'Pris en compte du like / dislike' });
+      if (req.body.like === 1) {
+        sauce.usersLiked.push(req.auth.userId);
+        sauce.usersDisliked = sauce.usersDisliked.filter(
+          (id) => id != req.auth.userId
+        );
+      } else if (req.body.like === -1) {
+        sauce.usersDisliked.push(req.auth.userId);
+        sauce.usersLiked = sauce.usersLiked.filter(
+          (id) => id != req.auth.userId
+        );
+      } else if (req.body.like === 0) {
+        sauce.usersDisliked = sauce.usersDisliked.filter(
+          (id) => id != req.auth.userId
+        );
+        sauce.usersLiked = sauce.usersLiked.filter(
+          (id) => id != req.auth.userId
+        );
       }
+      /* Les Likes ou Dislikes sont la somme des personnes qui ont likés ou dislikés */
+      sauce.likes = sauce.usersLiked.length;
+      sauce.dislikes = sauce.usersDisliked.length;
+      sauce.save();
+      res.status(200).json({ message: 'Pris en compte du like / dislike' });
     })
     .catch((error) => {
       res.status(500).json({ error });
